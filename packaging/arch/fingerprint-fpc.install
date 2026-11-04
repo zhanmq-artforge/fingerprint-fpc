@@ -1,0 +1,29 @@
+post_install() {
+    # Mask stock fprintd to avoid D-Bus conflicts
+    if systemctl list-unit-files | grep -q "^fprintd.service"; then
+        systemctl stop fprintd 2>/dev/null || true
+        systemctl mask fprintd 2>/dev/null || true
+    fi
+
+    # Set secure permissions on biometric storage
+    mkdir -p /var/lib/fprint
+    chmod 0700 /var/lib/fprint
+
+    systemctl daemon-reload
+    systemctl enable --now fingerprint-fpc.service
+
+    echo "==> fingerprint-fpc installed and activated."
+    echo "==> Verify status: systemctl status fingerprint-fpc"
+    echo "==> Ensure PAM fingerprint is enabled in /etc/pam.d/system-auth"
+}
+
+pre_remove() {
+    systemctl stop fingerprint-fpc.service 2>/dev/null || true
+    systemctl disable fingerprint-fpc.service 2>/dev/null || true
+}
+
+post_remove() {
+    systemctl unmask fprintd 2>/dev/null || true
+    systemctl daemon-reload
+    echo "==> Stock fprintd unmasked and system state restored."
+}

@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    purge)
+        rm -rf /var/lib/fprint/fpc*.bin* 2>/dev/null || true
+        systemctl unmask fprintd 2>/dev/null || true
+        systemctl daemon-reload || true
+    ;;
+    remove)
+        systemctl unmask fprintd 2>/dev/null || true
+        systemctl daemon-reload || true
+    ;;
+esac
+
+exit 0

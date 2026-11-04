@@ -1,0 +1,32 @@
+# Maintainer: zhanmq <zhanmq.china@gmail.com>
+pkgname=fingerprint-fpc
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="High-reliability FPC 10a5:9201 / 10a5:a900 fingerprint daemon implementing net.reactivated.Fprint"
+arch=('x86_64' 'aarch64')
+url="https://github.com/zhanmq-artforge/fingerprint-fpc"
+license=('GPL-3.0-or-later')
+depends=('dbus' 'libusb' 'openssl')
+makedepends=('cargo' 'rust' 'pkgconf')
+conflicts=('fprintd')
+provides=('fprintd')
+install=fingerprint-fpc.install
+source=("$pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+    cargo build --release --locked
+}
+
+check() {
+    cargo test --release --locked
+}
+
+package() {
+    install -Dm755 "target/release/fingerprint-fpc" "$pkgdir/usr/bin/fingerprint-fpc"
+    install -Dm644 "fingerprint-fpc.service" "$pkgdir/usr/lib/systemd/system/fingerprint-fpc.service"
+    install -Dm644 "dbus/net.reactivated.Fprint.service" "$pkgdir/usr/share/dbus-1/system-services/net.reactivated.Fprint.service"
+    install -Dm644 "dbus/net.reactivated.Fprint.conf" "$pkgdir/usr/share/dbus-1/system.d/net.reactivated.Fprint.conf"
+    install -Dm644 "polkit/net.reactivated.fprint.policy" "$pkgdir/usr/share/polkit-1/actions/net.reactivated.fprint.policy"
+    install -d -m 0700 "$pkgdir/var/lib/fprint"
+}

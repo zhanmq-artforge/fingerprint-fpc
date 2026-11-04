@@ -1,0 +1,28 @@
+[Unit]
+Description=FPC 10a5:9201 / 10a5:a900 Fingerprint D-Bus Daemon (fprintd drop-in)
+Documentation=https://github.com/vrolife/fingerprint-ocv
+After=dbus.service
+Conflicts=fprintd.service
+# Alias fprintd so GDM, lockscreens, and PAM services bind cleanly
+Alias=fprintd.service
+
+[Service]
+Type=dbus
+BusName=net.reactivated.Fprint
+# By default runs with 30s idle timeout for on-demand D-Bus system activation.
+# Set --idle-timeout 0 if you prefer a permanent daemon.
+ExecStart=/usr/bin/fingerprint-fpc --bus system --data-path /var/lib/fprint --idle-timeout 30
+Restart=on-failure
+RestartSec=2
+
+# Security Sandboxing & POSIX Hardening
+UMask=0077
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/fprint
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

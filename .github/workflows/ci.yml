@@ -1,0 +1,37 @@
+name: CI / Quality & Tests
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libusb-1.0-0-dev libssl-dev pkg-config
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache Cargo Dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Code Formatting Check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy Linter Check
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Run Unit Tests
+        run: cargo test --verbose

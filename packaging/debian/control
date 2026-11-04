@@ -1,0 +1,14 @@
+Package: fingerprint-fpc
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: any
+Maintainer: zhanmq <zhanmq.china@gmail.com>
+Depends: dbus, libusb-1.0-0
+Recommends: libpam-fprintd
+Provides: fprintd
+Replaces: fprintd
+Description: High-reliability FPC 10a5:9201 / 10a5:a900 fingerprint daemon
+ Modern, memory-safe Rust drop-in replacement for fprintd,
+ specifically engineered for FPC sensors (10a5:9201 and 10a5:a900)
+ found in Xiaomi / RedmiBook laptops. Implements net.reactivated.Fprint.

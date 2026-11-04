@@ -1,0 +1,50 @@
+[package]
+name = "fingerprint-fpc"
+version = "1.0.0"
+edition = "2021"
+authors = ["zhanmq <zhanmq.china@gmail.com>"]
+description = "High-reliability FPC 10a5:9201 / 10a5:a900 fingerprint daemon implementing net.reactivated.Fprint"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/zhanmq-artforge/fingerprint-fpc"
+
+[dependencies]
+# Async runtime & sync primitives
+tokio = { version = "1.38", features = ["full"] }
+futures-lite = "2"
+
+# D-Bus integration (implements net.reactivated.Fprint.Manager and Device)
+zbus = { version = "5", features = ["tokio"] }
+
+# USB communication
+rusb = "0.9"
+
+# Pure-Rust cryptography (No C OpenSSL 1.1 / 3.0 ABI issues)
+sha2 = "0.10"
+hmac = "0.12"
+aes = "0.8"
+cbc = "0.1"
+chacha20poly1305 = "0.10"
+cipher = { version = "0.4", features = ["block-padding"] }
+subtle = "2.6"
+
+# POSIX & System
+libc = "0.2"
+
+# Serialization and persistence
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tempfile = "3.10"
+
+# CLI & Configuration
+clap = { version = "4.5", features = ["derive"] }
+
+# Logging & Diagnostic tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+
+# OpenSSL for TLS-PSK tunnel with sensor
+openssl = { version = "0.10", features = ["vendored"] }
+
+# Strongly typed errors
+thiserror = "2.0"
+anyhow = "1.0"

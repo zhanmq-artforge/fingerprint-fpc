@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        # Create secure storage directory
+        mkdir -p /var/lib/fprint
+        chmod 0700 /var/lib/fprint
+        chown root:root /var/lib/fprint
+
+        # Mask conflicting native fprintd
+        if systemctl list-unit-files | grep -q "^fprintd.service"; then
+            systemctl stop fprintd 2>/dev/null || true
+            systemctl mask fprintd 2>/dev/null || true
+        fi
+
+        # Reload systemd and enable fingerprint-fpc
+        systemctl daemon-reload || true
+        systemctl enable --now fingerprint-fpc.service || true
+
+        # Enable PAM fingerprint auth if on Ubuntu/Debian
+        if which pam-auth-update >/dev/null 2>&1; then
+            pam-auth-update --enable fingerprint 2>/dev/null || true
+        fi
+    ;;
+esac
+
+exit 0

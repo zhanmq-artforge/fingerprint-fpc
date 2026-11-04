@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<policyconfig>
+  <vendor>Fingerprint Cards FPC Driver</vendor>
+  <vendor_url>https://github.com/vrolife/fingerprint-ocv</vendor_url>
+
+  <action id="net.reactivated.fprint.device.enroll">
+    <description>Enroll fingerprints</description>
+    <message>Privileges are required to enroll fingerprints.</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_self_keep</allow_active>
+    </defaults>
+  </action>
+
+  <action id="net.reactivated.fprint.device.verify">
+    <description>Verify fingerprint</description>
+    <message>Privileges are required to verify fingerprints.</message>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+  </action>
+
+  <action id="net.reactivated.fprint.device.setusername">
+    <description>Manage fingerprints for other users</description>
+    <message>Privileges are required to manage fingerprints for another user.</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+  </action>
+</policyconfig>
